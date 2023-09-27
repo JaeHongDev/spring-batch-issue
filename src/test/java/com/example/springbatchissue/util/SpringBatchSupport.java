@@ -7,6 +7,7 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import org.springframework.boot.logging.LoggerGroup;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
@@ -33,5 +34,15 @@ public class SpringBatchSupport {
             log.info("job 실행 실패");
             throw new RuntimeException(e);
         }
+    }
+
+    protected void replaceBean(ReplaceBeanRegistry replaceBeanRegistry){
+        DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) applicationContext.getAutowireCapableBeanFactory();
+        replaceBeanRegistry.replace(registry);
+    }
+
+    @FunctionalInterface
+    public interface ReplaceBeanRegistry{
+        void replace(DefaultSingletonBeanRegistry defaultSingletonBeanRegistry);
     }
 }

@@ -20,7 +20,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 @RequiredArgsConstructor
 public class ErrorCaseBatchConfig {
 
-    private final CreateItemReaderFactory createItemReaderFactory;
     public static final String BATCH_NAME = "ErrorCaseBatch";
     public static final String JOB_NAME = BATCH_NAME + "Job";
     public static final String STEP_NAME = BATCH_NAME + "Step";
@@ -28,6 +27,7 @@ public class ErrorCaseBatchConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
     private final UpdateMemberRepository updateMemberRepository;
+    private final CreateItemReaderFactory createItemReaderFactory;
     @Bean(JOB_NAME)
     Job job(){
         return new JobBuilder(JOB_NAME, jobRepository)
@@ -48,5 +48,6 @@ public class ErrorCaseBatchConfig {
                             .toList());
                 }).build();
     }
+
 }
 

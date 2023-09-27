@@ -2,6 +2,8 @@ package com.example.springbatchissue.config;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 import com.example.springbatchissue.domain.Member;
 import com.example.springbatchissue.domain.UpdateMemberRepository;
@@ -14,34 +16,35 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ErrorCaseBatchConfigTest extends SpringBatchSupport {
 
-    @MockBean
-    private CreateItemReaderFactory createItemReaderFactory;
 
     @Autowired
     private UpdateMemberRepository updateMemberRepository;
 
+    @MockBean
+    private CreateItemReaderFactory createItemReaderFactory;
+
     @Test
     void ItemReaderFactory의_mock이_동작하지_않는다(){
         final var fakeItemReader = new FakeItemReader(
-                new Member("start"),
-                new Member("second"),
-                new Member("third"),
-                null
+                    new Member("start"),
+                    new Member("second"),
+                    new Member("third"),
+                    null
         );
-
-
-        given(createItemReaderFactory.createItemReader())
-                .willReturn(fakeItemReader);
+        doReturn(fakeItemReader).when(createItemReaderFactory).createItemReader();
 
         //when
         this.launchJob(ErrorCaseBatchConfig.JOB_NAME);
@@ -50,8 +53,6 @@ class ErrorCaseBatchConfigTest extends SpringBatchSupport {
         //then
         Assertions.assertThat(updateMemberRepository.count()).isEqualTo(3L);
     }
-
-
 
     static class FakeItemReader implements ItemReader<Member>{
 
@@ -67,5 +68,8 @@ class ErrorCaseBatchConfigTest extends SpringBatchSupport {
             return members.poll();
         }
     }
+
+
+
 
 }
