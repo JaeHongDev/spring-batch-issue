@@ -17,16 +17,10 @@ public class CustomProxyItemReaderDelivery implements ProxyItemReaderDelivery<Me
     private final Parameter parameter = Parameter.A;
     @Override
     public ItemReader<Member> deliveryItemReader() {
-
         return switch (parameter){
             case A,B-> new JpaCursorItemReader<>();
             case C -> new SingleItemPeekableItemReader<>();
         };
-    }
-
-
-    public static void main(String...args) throws Exception{
-        final var proxyItemReader = new ProxyItemReader<>(new CustomProxyItemReaderDelivery());
     }
 
     static enum Parameter{

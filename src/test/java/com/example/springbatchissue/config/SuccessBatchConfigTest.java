@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,6 +34,8 @@ class SuccessBatchConfigTest extends SpringBatchSupport {
                 new Member("third"),
                 null
         );
+
+        ItemReader
 
         BDDMockito.given(customProxyItemReaderDelivery.deliveryItemReader()).willReturn(fakeItemReader);
 

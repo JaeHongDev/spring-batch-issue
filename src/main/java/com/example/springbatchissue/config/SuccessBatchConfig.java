@@ -42,7 +42,7 @@ public class SuccessBatchConfig {
     public Step step(){
         return new StepBuilder(STEP_NAME, jobRepository)
                 .<Member,Member >chunk(10, transactionManager)
-                .reader(new ProxyItemReader<>(proxyItemReaderDelivery))
+                .reader(new ProxyItemReader<>(proxyItemReaderDelivery::deliveryItemReader))
                 .writer(chunk -> {
                     log.info("{}",chunk.getItems());
                     updateMemberRepository.saveAll(chunk.getItems()

@@ -13,9 +13,7 @@ import org.springframework.stereotype.Component;
 public class CreateItemReaderFactory {
 
     public ItemReader<Member> createItemReader(){
-        return () -> {
-            return null;
-        };
+        return () -> null;
     }
 
 
