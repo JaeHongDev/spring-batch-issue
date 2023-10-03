@@ -13,6 +13,8 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.database.JpaPagingItemReader;
+import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -43,6 +45,21 @@ public class SuccessBatchConfig {
         return new StepBuilder(STEP_NAME, jobRepository)
                 .<Member,Member >chunk(10, transactionManager)
                 .reader(new ProxyItemReader<>(proxyItemReaderDelivery::deliveryItemReader))
+                .writer(chunk -> {
+                    log.info("{}",chunk.getItems());
+                    updateMemberRepository.saveAll(chunk.getItems()
+                            .stream()
+                            .map(UpdateMember::from)
+                            .toList());
+                })
+                .build();
+    }
+
+    @Bean(STEP_NAME + "1")
+    Step step1(){
+        return new StepBuilder(STEP_NAME + "1", jobRepository)
+                .<Member,Member >chunk(10, transactionManager)
+                .reader(new JpaPagingItemReaderBuilder<Member>().build())
                 .writer(chunk -> {
                     log.info("{}",chunk.getItems());
                     updateMemberRepository.saveAll(chunk.getItems()
