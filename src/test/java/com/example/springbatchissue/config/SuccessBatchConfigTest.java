@@ -35,7 +35,6 @@ class SuccessBatchConfigTest extends SpringBatchSupport {
                 null
         );
 
-        ItemReader
 
         BDDMockito.given(customProxyItemReaderDelivery.deliveryItemReader()).willReturn(fakeItemReader);
 

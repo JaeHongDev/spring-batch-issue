@@ -17,7 +17,12 @@ import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
 @SpringBatchTest
-@TestPropertySource(properties = "spring.batch.job.enabled=false")
+@TestPropertySource(
+        properties = {
+                "spring.batch.job.enabled=false",
+                "spring.jpa.show-sql=true"
+        }
+)
 public class SpringBatchSupport {
     private static final Logger log = LoggerFactory.getLogger(SpringBatchSupport.class);
     @Autowired
